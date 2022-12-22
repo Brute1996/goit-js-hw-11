@@ -8,16 +8,20 @@
     <script type="module" src="./index.js"></script>
   </head>
   <body>
-    <!-- Load icon library -->
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
-    />
-
     <!-- The form -->
-    <form class="example" action="action_page.php">
-      <input type="text" placeholder="Search image" name="search" />
-      <button type="submit"><i class="fa fa-search"></i></button>
-    </form>
+    <div class="form__wrapper">
+      <form class="search-form" id="search-form">
+        <input
+          type="text"
+          name="searchQuery"
+          autocomplete="off"
+          placeholder="Search images..."
+        />
+        <button type="submit">Search</button>
+      </form>
+    </div>
+    <div class="gallery">
+      <!-- Карточки изображений -->
+    </div>
   </body>
 </html>
