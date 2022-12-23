@@ -9,6 +9,7 @@ const loadMoreBtn = document.querySelector('.load-more')
 searchForm.addEventListener('submit', (e) => {
     e.preventDefault();
     
+    galleryList.textContent = '';
     searchPhotos().then(photo => renderPhotoCardsMarkup(photo.data.hits))
 })
 
@@ -17,7 +18,7 @@ loadMoreBtn.addEventListener('click', () => {
 } )
 
 const renderPhotoCardsMarkup = (responsePhotosArr) => {
-    galleryList.textContent = '';
+    
 
     const renderMarkup = responsePhotosArr.map(photo => {
         return `<div class="photo-card">
@@ -65,6 +66,6 @@ const searchPhotos = async () => {
             per_page:40,
         },
     });
-    
+
     return axiosGetPictures;
 }
