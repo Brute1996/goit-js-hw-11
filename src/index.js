@@ -10,6 +10,7 @@ searchForm.addEventListener('submit', (e) => {
     e.preventDefault();
     
     galleryList.textContent = '';
+
     searchPhotos().then(photo => renderPhotoCardsMarkup(photo.data.hits))
 })
 
