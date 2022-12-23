@@ -23,7 +23,7 @@ const renderPhotoCardsMarkup = (responsePhotosArr) => {
 
     const renderMarkup = responsePhotosArr.map(photo => {
         return `<div class="photo-card">
-            <img src="${photo.webformatURL}" alt="${photo.tags}" loading="lazy"" />
+            <img src="${photo.webformatURL}" alt="${photo.tags}" loading="lazy" />
             <div class="info">
                 <p class="info-item">
                     <b>Likes</b>
@@ -46,13 +46,13 @@ const renderPhotoCardsMarkup = (responsePhotosArr) => {
         </div>`
     }).join('')
     
-    galleryList.insertAdjacentHTML('afterbegin',renderMarkup )
+    galleryList.insertAdjacentHTML('beforeend',renderMarkup )
 }
 
 
-const searchPhotos = async () => {
+let currentPage = 1;
 
-    let activePage = 1;
+const searchPhotos = async () => {
 
     const axiosGetPictures = await axios({
         method: 'get',
@@ -63,10 +63,12 @@ const searchPhotos = async () => {
             image_type: 'photo',
             orientation: 'horizontal',
             safesearch: true,
-            page: activePage,
-            per_page:40,
+            page: currentPage,
+            per_page:5,
         },
     });
+
+    currentPage +=1;
 
     return axiosGetPictures;
 }
