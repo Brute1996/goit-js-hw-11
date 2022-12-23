@@ -5,16 +5,21 @@ const searchForm = document.querySelector('.search-form')
 const galleryList = document.querySelector('.gallery')
 const loadMoreBtn = document.querySelector('.load-more')
 
+let currentPage;
 
 searchForm.addEventListener('submit', (e) => {
     e.preventDefault();
-    
+
+    currentPage = 1;
     galleryList.textContent = '';
 
     searchPhotos().then(photo => renderPhotoCardsMarkup(photo.data.hits))
+
+    loadMoreBtn.classList.remove('is-hidden')
 })
 
 loadMoreBtn.addEventListener('click', () => {
+    currentPage +=1;
     searchPhotos().then(photo => renderPhotoCardsMarkup(photo.data.hits))
 } )
 
@@ -50,7 +55,6 @@ const renderPhotoCardsMarkup = (responsePhotosArr) => {
 }
 
 
-let currentPage = 1;
 
 const searchPhotos = async () => {
 
@@ -64,11 +68,9 @@ const searchPhotos = async () => {
             orientation: 'horizontal',
             safesearch: true,
             page: currentPage,
-            per_page:5,
+            per_page: 3,
         },
     });
-
-    currentPage +=1;
 
     return axiosGetPictures;
 }
