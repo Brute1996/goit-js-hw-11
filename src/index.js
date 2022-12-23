@@ -3,21 +3,22 @@ const axios = require('axios').default;
 
 const searchForm = document.querySelector('.search-form')
 const galleryList = document.querySelector('.gallery')
+const loadMoreBtn = document.querySelector('.load-more')
 
 
-searchForm.addEventListener('click', (e) => {
+searchForm.addEventListener('submit', (e) => {
     e.preventDefault();
-
-    if (e.target.nodeName !== 'BUTTON') {
-        return
-    }
     
     searchPhotos().then(photo => renderPhotoCardsMarkup(photo.data.hits))
 })
 
+loadMoreBtn.addEventListener('click', () => {
+    searchPhotos().then(photo => renderPhotoCardsMarkup(photo.data.hits))
+} )
+
 const renderPhotoCardsMarkup = (responsePhotosArr) => {
     galleryList.textContent = '';
-    
+
     const renderMarkup = responsePhotosArr.map(photo => {
         return `<div class="photo-card">
             <img src="${photo.webformatURL}" alt="${photo.tags}" loading="lazy"" />
@@ -49,6 +50,8 @@ const renderPhotoCardsMarkup = (responsePhotosArr) => {
 
 const searchPhotos = async () => {
 
+    let activePage = 1;
+
     const axiosGetPictures = await axios({
         method: 'get',
         url: 'https://pixabay.com/api/',
@@ -58,6 +61,8 @@ const searchPhotos = async () => {
             image_type: 'photo',
             orientation: 'horizontal',
             safesearch: true,
+            page: activePage,
+            per_page:40,
         },
     });
     
