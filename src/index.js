@@ -1,4 +1,5 @@
 const axios = require('axios').default;
+import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
 
 const searchForm = document.querySelector('.search-form')
@@ -10,18 +11,44 @@ let currentPage;
 searchForm.addEventListener('submit', (e) => {
     e.preventDefault();
 
-    currentPage = 1;
+    loadMoreBtn.classList.add('is-hidden')
     galleryList.textContent = '';
 
-    searchPhotos().then(photo => renderPhotoCardsMarkup(photo.data.hits))
+    searchPhotos().then(photo => {
 
-    loadMoreBtn.classList.remove('is-hidden')
+        if (photo.data.hits.length === 0) {
+            
+            Notify.failure('Sorry, there are no images matching your search query. Please try again.')
+            return 
+        }
+
+        currentPage = 1;
+        
+        renderPhotoCardsMarkup(photo.data.hits)
+        loadMoreBtn.classList.remove('is-hidden')
+    } )
+
+    
 })
 
 loadMoreBtn.addEventListener('click', () => {
+    
     currentPage +=1;
-    searchPhotos().then(photo => renderPhotoCardsMarkup(photo.data.hits))
-} )
+    searchPhotos().then(photo => {
+        
+        renderPhotoCardsMarkup(photo.data.hits)
+        console.log(galleryList.childElementCount);
+        console.log(photo.data.totalHits);
+
+        if (galleryList.childElementCount === photo.data.totalHits) {
+            Notify.info("We're sorry, but you've reached the end of search results.")
+            loadMoreBtn.classList.add('is-hidden')
+        };
+        
+    })
+    
+    
+})
 
 const renderPhotoCardsMarkup = (responsePhotosArr) => {
     
@@ -68,7 +95,7 @@ const searchPhotos = async () => {
             orientation: 'horizontal',
             safesearch: true,
             page: currentPage,
-            per_page: 3,
+            per_page: 40,
         },
     });
 
