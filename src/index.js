@@ -1,10 +1,13 @@
 const axios = require('axios').default;
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
+import "simplelightbox/dist/simple-lightbox.min.css";
+
 
 
 const searchForm = document.querySelector('.search-form')
 const galleryList = document.querySelector('.gallery')
 const loadMoreBtn = document.querySelector('.load-more')
+
 
 let currentPage;
 
@@ -23,22 +26,20 @@ searchForm.addEventListener('submit', (e) => {
         }
 
         currentPage = 1;
-        
+        Notify.success(`"Hooray! We found ${photo.data.totalHits} images.`)
         renderPhotoCardsMarkup(photo.data.hits)
         loadMoreBtn.classList.remove('is-hidden')
+        
     } )
 
     
 })
 
 loadMoreBtn.addEventListener('click', () => {
-    
+
     currentPage +=1;
     searchPhotos().then(photo => {
-        
         renderPhotoCardsMarkup(photo.data.hits)
-        console.log(galleryList.childElementCount);
-        console.log(photo.data.totalHits);
 
         if (galleryList.childElementCount === photo.data.totalHits) {
             Notify.info("We're sorry, but you've reached the end of search results.")
@@ -47,38 +48,39 @@ loadMoreBtn.addEventListener('click', () => {
         
     })
     
-    
 })
 
 const renderPhotoCardsMarkup = (responsePhotosArr) => {
     
 
     const renderMarkup = responsePhotosArr.map(photo => {
-        return `<div class="photo-card">
-            <img src="${photo.webformatURL}" alt="${photo.tags}" loading="lazy" />
-            <div class="info">
-                <p class="info-item">
-                    <b>Likes</b>
-                    ${photo.likes}
-                </p>
-                <p class="info-item">
-                    <b>Views</b>
-                    ${photo.views}
-                </p>
-                <p class="info-item">
-                    <b>Comments</b>
-                    ${photo.comments}
-                </p>
-                <p class="info-item">
-                    <b>Downloads</b>
-                    ${photo.downloads}
-                    
-                </p>
-            </div>
-        </div>`
+        return `
+            <div class="photo-card">
+                <img src="${photo.webformatURL}" alt="${photo.tags}" loading="lazy" />
+                <div class="info">
+                    <p class="info-item">
+                        <b>Likes</b>
+                        ${photo.likes}
+                    </p>
+                    <p class="info-item">
+                        <b>Views</b>
+                        ${photo.views}
+                    </p>
+                    <p class="info-item">
+                        <b>Comments</b>
+                        ${photo.comments}
+                    </p>
+                    <p class="info-item">
+                        <b>Downloads</b>
+                        ${photo.downloads}
+                        
+                    </p>
+                </div>
+            </div>`
+        
     }).join('')
     
-    galleryList.insertAdjacentHTML('beforeend',renderMarkup )
+    galleryList.insertAdjacentHTML('beforeend', renderMarkup)
 }
 
 
@@ -101,3 +103,5 @@ const searchPhotos = async () => {
 
     return axiosGetPictures;
 }
+
+
