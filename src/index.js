@@ -1,12 +1,15 @@
 const axios = require('axios').default;
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import "simplelightbox/dist/simple-lightbox.min.css";
+import SimpleLightbox from "simplelightbox";
 
 
 
 const searchForm = document.querySelector('.search-form')
 const galleryList = document.querySelector('.gallery')
 const loadMoreBtn = document.querySelector('.load-more')
+
+
 
 
 let currentPage;
@@ -54,8 +57,10 @@ const renderPhotoCardsMarkup = (responsePhotosArr) => {
     
 
     const renderMarkup = responsePhotosArr.map(photo => {
+
         return `
-            <div class="photo-card">
+        
+            <a href="${photo.largeImageURL}"><div class="photo-card">
                 <img src="${photo.webformatURL}" alt="${photo.tags}" loading="lazy" />
                 <div class="info">
                     <p class="info-item">
@@ -76,11 +81,15 @@ const renderPhotoCardsMarkup = (responsePhotosArr) => {
                         
                     </p>
                 </div>
-            </div>`
+            </div>
+        </a>
+            `
         
     }).join('')
     
     galleryList.insertAdjacentHTML('beforeend', renderMarkup)
+
+    lightBoxGalleryActivate();
 }
 
 
@@ -104,4 +113,8 @@ const searchPhotos = async () => {
     return axiosGetPictures;
 }
 
+const lightBoxGalleryActivate = () => {
+    const lightbox = new SimpleLightbox('.gallery a');
 
+    lightbox.refresh()
+}
